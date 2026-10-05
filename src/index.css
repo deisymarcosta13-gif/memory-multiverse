@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    /* BOTONES — sistema común para HUD y modales */
+    .btn {
+        @apply inline-flex h-11 items-center justify-center gap-2 rounded-xl px-4
+            text-sm font-semibold tracking-wide transition-colors duration-150
+            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300
+            focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950
+            disabled:cursor-not-allowed disabled:opacity-50;
+    }
+
+    .btn-sm {
+        @apply h-9 gap-1.5 px-2.5 text-xs sm:h-10 sm:px-3.5 sm:text-sm;
+    }
+
+    .btn-primary {
+        @apply btn bg-lime-400 text-slate-950 hover:bg-lime-300 disabled:hover:bg-lime-400;
+    }
+
+    .btn-secondary {
+        @apply btn border border-white/15 bg-white/5 text-slate-100 hover:border-white/25 hover:bg-white/10;
+    }
+
+    .btn-danger {
+        @apply btn border border-rose-400/40 bg-rose-500/10 text-rose-100 hover:bg-rose-500/20;
+    }
+
+    /* PANEL — fondo de modales y HUD */
+    .panel {
+        @apply relative overflow-hidden rounded-2xl border border-white/10 bg-slate-950/85
+            shadow-2xl shadow-black/50 backdrop-blur-xl;
+    }
+
+    /* línea de acento superior ("borde de portal") */
+    .panel-accent {
+        @apply pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r;
+    }
+
+    /* TABLERO
+       El ancho se calcula para que todas las filas quepan en la altura visible,
+       sin bajar de ~4rem por carta (en pantallas muy bajas se hace scroll en vez de recortar). */
+    .game-column {
+        --c: var(--cols);
+        --r: var(--rows);
+        --hud-space: 11.5rem;
+        --board-w: min(
+            100%,
+            var(--board-max),
+            max(calc(var(--c) * 4.25rem), calc((100vh - var(--hud-space)) * var(--c) / var(--r)))
+        );
+        width: min(100%, max(var(--board-w), 40rem));
+    }
+
+    @supports (height: 100dvh) {
+        .game-column {
+            --board-w: min(
+                100%,
+                var(--board-max),
+                max(calc(var(--c) * 4.25rem), calc((100dvh - var(--hud-space)) * var(--c) / var(--r)))
+            );
+        }
+    }
+
+    @media (min-width: 640px) {
+        .game-column {
+            --c: var(--cols-sm);
+            --r: var(--rows-sm);
+        }
+    }
+
+    .board {
+        @apply mx-auto grid gap-2 sm:gap-3;
+        width: var(--board-w);
+        grid-template-columns: repeat(var(--c), minmax(0, 1fr));
+    }
+
+    /* REVERSO DE LA CARTA: portal abstracto */
+    .card-back {
+        background:
+            radial-gradient(circle at 50% 50%, rgb(163 230 53 / 0.22) 0 16%, transparent 17%),
+            radial-gradient(circle at 50% 50%, transparent 0 30%, rgb(34 211 238 / 0.18) 31% 33%, transparent 34%),
+            repeating-conic-gradient(from 20deg at 50% 50%, rgb(163 230 53 / 0.05) 0 10deg, transparent 10deg 30deg),
+            radial-gradient(circle at 50% 45%, #1a3a2a 0%, #0b1220 72%);
+    }
+}
+
+.perspective {
+    perspective: 1000px;
+}
+
+.transform-style {
+    transform-style: preserve-3d;
+}
+
+.rotate-y-180 {
+    transform: rotateY(180deg);
+}
+
+.backface-hidden {
+    backface-visibility: hidden;
+}
